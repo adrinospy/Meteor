@@ -7,10 +7,10 @@ const NavLinks = () => {
 
     return (
         <>
-        <Link className="px-[35px] font-semibold" href="/">Home</Link>
-        <Link className="px-[35px] font-semibold" href="/features">Features</Link>
-        <Link className="px-[35px] font-semibold" href="/about">About</Link>
-        <Link className="pl-[35px] pr-[80px] font-semibold" href="/projects">Projects</Link>
+        <Link className="mx-[35px] font-semibold" href="/">Home</Link>
+        <Link className="mx-[35px] font-semibold" href="/features">Features</Link>
+        <Link className="mx-[35px] font-semibold" href="/about">About</Link>
+        <Link className="ml-[35px] mr-[80px] font-semibold" href="/projects">Projects</Link>
         </>
     )
     }
