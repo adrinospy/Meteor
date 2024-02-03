@@ -7,10 +7,10 @@ const NavLinks = () => {
 
     return (
         <>
-        <Link className="px-[35px] font-semibold" href="/">Home</Link>
-        <Link className="px-[35px] font-semibold" href="/features">Features</Link>
-        <Link className="px-[35px] font-semibold" href="/about">About</Link>
-        <Link className="pl-[35px] pr-[80px] font-semibold" href="/projects">Projects</Link>
+        <Link className="mx-[35px] font-semibold" href="/">Home</Link>
+        <Link className="mx-[35px] font-semibold" href="/features">Features</Link>
+        <Link className="mx-[35px] font-semibold" href="/about">About</Link>
+        <Link className="ml-[35px] mr-[80px] font-semibold" href="/projects">Projects</Link>
         </>
     )
     }
@@ -21,7 +21,7 @@ const NavLinks = () => {
         <header className="pt-[20px] mx-auto max-w-[1440px] flex justify-between">
             <div className="justify-self-start"><Logo/></div>
                 <div className="flex items-center"><NavLinks />
-            <FlippableButton BfrTxt="Start a Meet?" AftTxt="Signin / login" />  
+            <FlippableButton BfrTxt="Start a Meet?" AftTxt="Login/Signin" />  
                 </div>
         </header>
     )
