@@ -16,8 +16,8 @@ interface FlippableButtonProps {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       >
-      <h1 className={`font-extrabold justify-center mt-[-10px] flex transition-all duration-300 ${isHovered ? 'mt-[55px]' : ''}`}>{BfrTxt}</h1>
-      <h1 className="font-extrabold justify-center mt-[-80px]">{AftTxt}</h1>
+      <h1 className={`font-extrabold justify-center flex transition-all duration-300 ${isHovered ? 'mt-[55px]' : 'mt-[-12px]'}`}>{BfrTxt}</h1>
+      <h1 className="font-extrabold justify-center mt-[-82px]">{AftTxt}</h1>
       </button>
       );
   }

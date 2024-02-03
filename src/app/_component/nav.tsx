@@ -21,7 +21,7 @@ const NavLinks = () => {
         <header className="pt-[20px] mx-auto max-w-[1440px] flex justify-between">
             <div className="justify-self-start"><Logo/></div>
                 <div className="flex items-center"><NavLinks />
-            <FlippableButton BfrTxt="Start a Meet?" AftTxt="Signin / login" />  
+            <FlippableButton BfrTxt="Start a Meet?" AftTxt="Login/Signin" />  
                 </div>
         </header>
     )
