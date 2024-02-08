@@ -18,7 +18,7 @@ jobs:
         run: |
           CHANGES=$(git diff --stat ${{ github.event.before }} ${{ github.sha }} | awk '{changes = strtonum($4) + strtonum($6)} END {print changed}')
           echo "Changed files: $CHANGES"
-
+          echo $(git diff --stat ${{ github.event.before }} ${{ github.sha }} | awk '{changes = strtonum($4) + strtonum($6)} END {print changed}')
           TINY_THRESHOLD=50
 
           PR_NUMBER="${{ github.event.number }}"
@@ -32,5 +32,5 @@ jobs:
           else
             echo "Adding label: huge"
             curl -X POST -H "$AUTH_HEADER" -d '{"labels":["huge"]}' "$API_URL"
-            curl -X DELETE -H "$AUTH_HEADER" "$API_URL/huge"
+            curl -X DELETE -H "$AUTH_HEADER" "$API_URL/tiny"
           fi
