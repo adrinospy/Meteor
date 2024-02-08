@@ -23,13 +23,18 @@ jobs:
           SMALL_CHANGES_THRESHOLD=10
           MEDIUM_CHANGES_THRESHOLD=50
 
+          PR_NUMBER="${{ github.event.number }}"
+          API_URL="https://api.github.com/repos/${{ github.repository }}/issues/${PR_NUMBER}/labels"
+          AUTH_HEADER="Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}"
+          echo $API_URL
+
           if [ $(echo "$CHANGES" | wc -l) -le $SMALL_CHANGES_THRESHOLD ]; then
             echo "Adding label: small-changes"
-            curl -X POST -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" -d '{"labels":["small-changes"]}' "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/labels"
+            curl -X POST -H "$AUTH_HEADER" -d '{"labels":["small-changes"]}' "$API_URL"
           elif [ $(echo "$CHANGES" | wc -l) -le $MEDIUM_CHANGES_THRESHOLD ]; then
             echo "Adding label: medium-changes"
-            curl -X POST -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" -d '{"labels":["medium-changes"]}' "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/labels"
+            curl -X POST -H "$AUTH_HEADER" -d '{"labels":["medium-changes"]}' "$API_URL"
           else
             echo "Adding label: large-changes"
-            curl -X POST -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" -d '{"labels":["large-changes"]}' "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/labels"
+            curl -X POST -H "$AUTH_HEADER" -d '{"labels":["large-changes"]}' "$API_URL"
           fi
