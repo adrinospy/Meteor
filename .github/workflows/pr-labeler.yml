@@ -32,5 +32,5 @@ jobs:
           else
             echo "Adding label: huge"
             curl -X POST -H "$AUTH_HEADER" -d '{"labels":["huge"]}' "$API_URL"
-            curl -X DELETE -H "$AUTH_HEADER" "$API_URL/tiny"
+            curl -X DELETE -H "$AUTH_HEADER" "$API_URL/huge"
           fi
