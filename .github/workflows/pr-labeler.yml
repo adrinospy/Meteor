@@ -22,10 +22,10 @@ jobs:
           echo "Changed files: $CHANGES"
 
           TINY_THRESHOLD=50
+
           PR_NUMBER="${{ github.event.number }}"
           API_URL="https://api.github.com/repos/${{ github.repository }}/issues/${PR_NUMBER}/labels"
           AUTH_HEADER="Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}"
-          LABEL_URL="$API_URL/huge"
 
           if [ "$CHANGES" -le "$TINY_THRESHOLD" ]; then
             LABEL="tiny"
@@ -36,5 +36,5 @@ jobs:
           fi
 
           echo "Adding label: $LABEL"
-          curl -X POST -H "$AUTH_HEADER" -d "{\"labels\":[\"$LABEL\"]}" "$API_URL"
-          curl -X DELETE -H "$AUTH_HEADER" "$LABEL_URL"
+          curl -X POST -H "$AUTH_HEADER" -d '{"labels":["$LABEL"]}' "$API_URL"
+          curl -X DELETE -H "$AUTH_HEADER" "$API_URL/$DELETE_LABEL"
