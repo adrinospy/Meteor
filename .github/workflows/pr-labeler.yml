@@ -21,7 +21,7 @@ jobs:
 
           TINY_THRESHOLD=50
           echo $CHANGES
-          echo git diff --name-only ${{ github.event.before }} ${{ github.sha }})
+          echo git diff --name-only ${{ github.event.before }} ${{ github.sha }}
 
           PR_NUMBER="${{ github.event.number }}"
           API_URL="https://api.github.com/repos/${{ github.repository }}/issues/${PR_NUMBER}/labels"
