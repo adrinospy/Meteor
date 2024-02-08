@@ -27,7 +27,7 @@ jobs:
           API_URL="https://api.github.com/repos/${{ github.repository }}/issues/${PR_NUMBER}/labels"
           AUTH_HEADER="Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}"
 
-          if [ $(echo "$CHANGES" | wc -l) -le $TINY_THRESHOLD ]; then
+          if [$CHANGES -le $TINY_THRESHOLD ]; then
             echo "Adding label: tiny"
             curl -X POST -H "$AUTH_HEADER" -d '{"labels":["tiny"]}' "$API_URL"
           else
