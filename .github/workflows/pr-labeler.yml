@@ -25,16 +25,20 @@ jobs:
           API_URL="https://api.github.com/repos/${{ github.repository }}/issues/${PR_NUMBER}/labels"
           AUTH_HEADER="Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}"
 
-          if [$CHANGES -le $TINY_THRESHOLD ]; then
-            echo "Adding label: tiny"
-            curl -X POST -H "$AUTH_HEADER" -d '{"labels":["huge"]}' "$API_URL"
-            if gh pr view $PR_NUMBER --json labels | jq -e '.[] | select(.name == "tiny")' > /dev/null; then
-              echo "Label 'tiny' found, removing..."
-              gh pr label $PR_NUMBER -d huge
+          if [ "$CHANGES" -le "$TINY_THRESHOLD" ]; then
+          echo "Adding label: tiny"
+          curl -X POST -H "$AUTH_HEADER" -d '{"labels":["tiny"]}' "$API_URL"
+        
+          if gh pr view $PR_NUMBER --json labels | jq -e '.[] | select(.name == "huge")' > /dev/null; then
+            echo "Label 'huge' found, removing..."
+            gh pr label $PR_NUMBER -d huge
           else
             echo "Adding label: huge"
             curl -X POST -H "$AUTH_HEADER" -d '{"labels":["huge"]}' "$API_URL"
             if gh pr view $PR_NUMBER --json labels | jq -e '.[] | select(.name == "tiny")' > /dev/null; then
               echo "Label 'tiny' found, removing..."
               gh pr label $PR_NUMBER -d tiny
+            fi
           fi
+          fi
+        
