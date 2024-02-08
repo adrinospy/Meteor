@@ -1,13 +1,43 @@
-name: 🏷 PR size labeler
+name: Label Changes
 
-on: [pull_request]
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
 
 jobs:
-  pr-labeler:
+  label-changes:
     runs-on: ubuntu-latest
-    name: Label the PR size
+
     steps:
-      - uses: BedrockStreaming/pr-size-labeler@v2.0.0
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          exclude_files: .lock
+          node-version: '14'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Check changes and label
+        run: |
+          CHANGES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
+          echo "Changed files: $CHANGES"
+
+          # Set your threshold values here
+          SMALL_CHANGES_THRESHOLD=10
+          MEDIUM_CHANGES_THRESHOLD=50
+
+          if [ $(echo "$CHANGES" | wc -l) -le $SMALL_CHANGES_THRESHOLD ]; then
+            echo "Adding label: small-changes"
+            curl -X POST -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" -d '{"labels":["small-changes"]}' "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/labels"
+          elif [ $(echo "$CHANGES" | wc -l) -le $MEDIUM_CHANGES_THRESHOLD ]; then
+            echo "Adding label: medium-changes"
+            curl -X POST -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" -d '{"labels":["medium-changes"]}' "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/labels"
+          else
+            echo "Adding label: large-changes"
+            curl -X POST -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" -d '{"labels":["large-changes"]}' "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/labels"
+          fi
