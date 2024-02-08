@@ -11,9 +11,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
       - name: Check changes and label
         run: |
           CHANGES=$(git diff --stat ${{ github.event.before }} ${{ github.sha }} | awk '{changes = strtonum($4) + strtonum($6)} END {print changes}')
@@ -25,7 +22,7 @@ jobs:
           API_URL="https://api.github.com/repos/${{ github.repository }}/issues/${PR_NUMBER}/labels"
           AUTH_HEADER="Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}"
 
-          if [$CHANGES -le $TINY_THRESHOLD ]; then
+          if [ $CHANGES -le $TINY_THRESHOLD ]; then
             echo "Adding label: tiny"
             curl -X POST -H "$AUTH_HEADER" -d '{"labels":["tiny"]}' "$API_URL"
             curl -X DELETE -H "$AUTH_HEADER" "$API_URL/huge"
