@@ -1,41 +1,17 @@
-name: PR Labeler
+name: 🏷 PR size labeler
 
-on:
-  pull_request:
-    types:
-      - opened
-      - synchronize
+on: [pull_request]
 
 jobs:
-  label_pr:
+  pr-labeler:
     runs-on: ubuntu-latest
-
+    name: Label the PR size
     steps:
-      - name: Install GitHub CLI
-        run: |
-          sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
-          sudo apt-add-repository https://cli.github.com/packages
-          sudo apt-get update
-          sudo apt-get install gh
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Run labeler script
-        run: |
-          changed_lines=$(git diff --shortstat ${{ github.event.before }} ${{ github.sha }} | awk '{print $1 + $4}')
-          echo "Changed lines: $changed_lines"
-
-          # Add labels based on the number of changed lines
-          if [ $changed_lines -lt 50 ]; then
-            echo "Adding label: small-change"
-            gh pr label ${{ github.event.number }} add small-change
-          elif [ $changed_lines -lt 200 ]; then
-            echo "Adding label: medium-change"
-            gh pr label ${{ github.event.number }} add medium-change
-          else
-            echo "Adding label: large-change"
-            gh pr label ${{ github.event.number }} add large-change
-          fi
-
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: BedrockStreaming/pr-size-labeler@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          exclude_files: .lock
+          xs_label:
+          required: false
+          default: "Size/XS"
+          xs_diff:
