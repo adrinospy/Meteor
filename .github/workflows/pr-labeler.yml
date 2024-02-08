@@ -11,6 +11,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
       - name: Check changes and label
         run: |
           CHANGES=$(git diff --stat ${{ github.event.before }} ${{ github.sha }} | awk '{changes = strtonum($4) + strtonum($6)} END {print changes}')
