@@ -1,14 +1,21 @@
-name: 🏷 PR size labeler
-
-on: 
-  pull_request:
+name: PR Size Watcher
+on: [pull_request]
 
 jobs:
-  pr-labeler:
+  build:
+    name: Check PR size
     runs-on: ubuntu-latest
-    name: Label the PR size
     steps:
-      - uses: BedrockStreaming/pr-size-labeler@v1.1.0
+      - uses: ookami-kb/gh-pr-size-watcher@v1.4.1
         with:
-          token: $
-          exclude_files: .lock
+          githubToken: ${{ secrets.GITHUB_TOKEN }} # required
+          errorSize: 500 # optional
+          errorMessage: ':no_entry: PR has more than **{allowed} additions**. Split it into smaller PRs.' # optional
+          warningSize: 300 # optional
+          warningMessage: ':warning: PR has more than **{allowed} additions**. Consider splitting it into smaller PRs.' # optional
+          excludeTitle: 'PR_SIZE_SKIP' # to skip validation if PR title matches regex, optional
+          excludePaths:  | # to exclude some files from calculation, optional
+            README.md
+            **/test/resources/*.json
+          excludeLabels:  | # to skip validation if PR labels contain one of these, optional
+            skip-size-check
