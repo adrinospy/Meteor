@@ -19,7 +19,8 @@ jobs:
           CHANGES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
           echo "Changed files: $CHANGES"
 
-          TINY_THRESHOLD=10
+          TINY_THRESHOLD=50
+          echo $CHANGES
 
           PR_NUMBER="${{ github.event.number }}"
           API_URL="https://api.github.com/repos/${{ github.repository }}/issues/${PR_NUMBER}/labels"
