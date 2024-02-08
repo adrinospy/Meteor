@@ -1,7 +1,7 @@
 name: Label Changes
 
 on:
-  pull_request_target:
+  pull_request:
     types:
       - opened
       - synchronize
@@ -19,30 +19,16 @@ jobs:
           CHANGES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
           echo "Changed files: $CHANGES"
 
-          # Set your threshold values here
-          SMALL_CHANGES_THRESHOLD=10
-          MEDIUM_CHANGES_THRESHOLD=50
+          TINY_THRESHOLD=10
 
           PR_NUMBER="${{ github.event.number }}"
           API_URL="https://api.github.com/repos/${{ github.repository }}/issues/${PR_NUMBER}/labels"
           AUTH_HEADER="Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}"
-          echo $API_URL
-          echo $AUTH_HEADER
 
-          if [ $(echo "$CHANGES" | wc -l) -le $SMALL_CHANGES_THRESHOLD ]; then
-            echo "Adding label: small-changes"
-            curl -X POST -H "$AUTH_HEADER" -d '{"labels":["small-changes"]}' "$API_URL"
-            curl -L \
-              -X PUT \
-              -H "Accept: application/vnd.github+json" \
-              -H "Authorization: Bearer <YOUR-TOKEN>" \
-              -H "X-GitHub-Api-Version: 2022-11-28" \
-              $API_URL \
-              -d '{"labels":["small-changes"]}'
-          elif [ $(echo "$CHANGES" | wc -l) -le $MEDIUM_CHANGES_THRESHOLD ]; then
-            echo "Adding label: medium-changes"
-            curl -X POST -H "$AUTH_HEADER" -d '{"labels":["medium-changes"]}' "$API_URL"
+          if [ $(echo "$CHANGES" | wc -l) -le $TINY_THRESHOLD ]; then
+            echo "Adding label: tiny"
+            curl -X POST -H "$AUTH_HEADER" -d '{"labels":["tiny"]}' "$API_URL"
           else
-            echo "Adding label: large-changes"
-            curl -X POST -H "$AUTH_HEADER" -d '{"labels":["large-changes"]}' "$API_URL"
+            echo "Adding label: huge"
+            curl -X POST -H "$AUTH_HEADER" -d '{"labels":["huge"]}' "$API_URL"
           fi
