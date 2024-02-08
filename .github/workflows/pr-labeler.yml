@@ -21,7 +21,6 @@ jobs:
 
           TINY_THRESHOLD=50
           echo $CHANGES
-          echo !github.event.pull_request.draft
           echo git diff --name-only ${{ github.event.before }} ${{ github.sha }})
 
           PR_NUMBER="${{ github.event.number }}"
