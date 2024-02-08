@@ -8,7 +8,7 @@ on:
 
 jobs:
   label-changes:
-    if: "!github.event.pull_request.draft"
+    if: '!github.event.pull_request.draft'
     runs-on: ubuntu-latest
 
     steps:
@@ -17,12 +17,13 @@ jobs:
 
       - name: Check changes and label
         run: |
-          CHANGES=$(git diff --numstat ${{ github.event.pull_request.base.ref }} ${{ github.event.pull_request.head.ref }})
+          CHANGES=$(git diff --stat ${{ github.event.before }} ${{ github.sha }} | grep "changed" | awk '{sum+=$3} END{print sum}')
           echo "Changed files: $CHANGES"
 
           TINY_THRESHOLD=50
           echo $CHANGES
           echo !github.event.pull_request.draft
+          echo git diff --name-only ${{ github.event.before }} ${{ github.sha }})
 
           PR_NUMBER="${{ github.event.number }}"
           API_URL="https://api.github.com/repos/${{ github.repository }}/issues/${PR_NUMBER}/labels"
