@@ -11,9 +11,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
       - name: Check changes and label
         run: |
-          CHANGES=$(git diff --stat ${{ github.event.before }} ${{ github.sha }} | awk '{changes = strtonum($4) + strtonum($6)} END {print changes}')
+          CHANGES=$(git diff --stat ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | awk '{changes = strtonum($4) + strtonum($6)} END {print changes}')
           echo "Changed files: $CHANGES"
 
           TINY_THRESHOLD=50
@@ -22,12 +27,14 @@ jobs:
           API_URL="https://api.github.com/repos/${{ github.repository }}/issues/${PR_NUMBER}/labels"
           AUTH_HEADER="Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}"
 
-          if [ $CHANGES -le $TINY_THRESHOLD ]; then
-            echo "Adding label: tiny"
-            curl -X POST -H "$AUTH_HEADER" -d '{"labels":["tiny"]}' "$API_URL"
-            curl -X DELETE -H "$AUTH_HEADER" "$API_URL/huge"
+          if [ "$CHANGES" -le "$TINY_THRESHOLD" ]; then
+            LABEL="tiny"
+            DELETE_LABEL="huge"
           else
-            echo "Adding label: huge"
-            curl -X POST -H "$AUTH_HEADER" -d '{"labels":["huge"]}' "$API_URL"
-            curl -X DELETE -H "$AUTH_HEADER" "$API_URL/tiny"
+            LABEL="huge"
+            DELETE_LABEL="tiny"
           fi
+
+          echo "Adding label: $LABEL"
+          curl -X POST -H "$AUTH_HEADER" -d "{\"labels\":[\"$LABEL\"]}" "$API_URL"
+          curl -X DELETE -H "$AUTH_HEADER" "$API_URL/$DELETE_LABEL"
