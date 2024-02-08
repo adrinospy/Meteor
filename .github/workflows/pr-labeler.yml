@@ -32,6 +32,13 @@ jobs:
           if [ $(echo "$CHANGES" | wc -l) -le $SMALL_CHANGES_THRESHOLD ]; then
             echo "Adding label: small-changes"
             curl -X POST -H "$AUTH_HEADER" -d '{"labels":["small-changes"]}' "$API_URL"
+            curl -L \
+              -X PUT \
+              -H "Accept: application/vnd.github+json" \
+              -H "Authorization: Bearer <YOUR-TOKEN>" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              $API_URL \
+              -d '{"labels":["small-changes"]}'
           elif [ $(echo "$CHANGES" | wc -l) -le $MEDIUM_CHANGES_THRESHOLD ]; then
             echo "Adding label: medium-changes"
             curl -X POST -H "$AUTH_HEADER" -d '{"labels":["medium-changes"]}' "$API_URL"
