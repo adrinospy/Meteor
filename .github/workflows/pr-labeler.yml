@@ -16,9 +16,9 @@ jobs:
 
       - name: Check changes and label
         run: |
-          CHANGES=$(git diff --stat ${{ github.event.before }} ${{ github.sha }} | awk '{changes = strtonum($4) + strtonum($6)} END {print changed}')
+          CHANGES=$(git diff --stat ${{ github.event.before }} ${{ github.sha }} | awk '{changes = strtonum($4) + strtonum($6)} END {print changes}')
           echo "Changed files: $CHANGES"
-          echo $(git diff --stat ${{ github.event.before }} ${{ github.sha }} | awk '{changes = strtonum($4) + strtonum($6)} END {print changed}')
+
           TINY_THRESHOLD=50
 
           PR_NUMBER="${{ github.event.number }}"
