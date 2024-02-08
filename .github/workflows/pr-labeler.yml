@@ -36,5 +36,5 @@ jobs:
           fi
 
           echo "Adding label: $LABEL"
-          curl -X POST -H "$AUTH_HEADER" -d '{"labels":[$LABEL]}' "$API_URL"
+          curl -X POST -H "$AUTH_HEADER" -d '{"labels":[\"$LABEL\"]}' "$API_URL"
           curl -X DELETE -H "$AUTH_HEADER" "$API_URL/$DELETE_LABEL"
