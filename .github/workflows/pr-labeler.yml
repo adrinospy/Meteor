@@ -18,10 +18,9 @@ jobs:
 
       - name: Check changes and label
         run: |
-          BASE_COMMIT=${{ github.sha }}
           FIRST_COMMIT=$(git rev-list --max-parents=0 $BASE_COMMIT)
 
-          CHANGES=$(git diff --stat main "$BASE_COMMIT" | awk '{changes = strtonum($4) + strtonum($6)} END {print changes}')
+          CHANGES=$(git diff --stat ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | awk '{changes = strtonum($4) + strtonum($6)} END {print changes}')
           echo "Changed files: $CHANGES"
 
           TINY_THRESHOLD=50
