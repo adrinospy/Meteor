@@ -1,9 +1,15 @@
 import NavBar from "./_component/nav";
+import InfoSection from "./_component/infoSection";
 
 export default function Home() {
+
+
+
   return (
-    <div className="h-[142vh] bg-gradient-to-b from-[#041827] from-[70%] to-[#ffffff]">
-      <NavBar/>
+    <div className="text-[#041827] h-[142vh] bg-[#ffffff]">
+      <div >
+      <NavBar/></div>
+      <InfoSection/>
     </div>
   );
 }

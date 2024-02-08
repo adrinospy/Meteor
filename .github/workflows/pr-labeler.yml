@@ -1,0 +1,36 @@
+name: Label Changes
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+
+jobs:
+  label-changes:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Check changes and label
+        run: |
+          CHANGES=$(git diff --stat ${{ github.event.before }} ${{ github.sha }} | grep "changed" | awk '{sum+=$3} END{print sum}')
+          echo "Changed files: $CHANGES"
+
+          TINY_THRESHOLD=50
+          echo $CHANGES
+          echo git diff --name-only ${{ github.event.before }} ${{ github.sha }}
+
+          PR_NUMBER="${{ github.event.number }}"
+          API_URL="https://api.github.com/repos/${{ github.repository }}/issues/${PR_NUMBER}/labels"
+          AUTH_HEADER="Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}"
+
+          if [ $(echo "$CHANGES" | wc -l) -le $TINY_THRESHOLD ]; then
+            echo "Adding label: tiny"
+            curl -X POST -H "$AUTH_HEADER" -d '{"labels":["tiny"]}' "$API_URL"
+          else
+            echo "Adding label: huge"
+            curl -X POST -H "$AUTH_HEADER" -d '{"labels":["huge"]}' "$API_URL"
+          fi
