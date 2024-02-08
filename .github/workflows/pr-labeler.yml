@@ -27,6 +27,7 @@ jobs:
           API_URL="https://api.github.com/repos/${{ github.repository }}/issues/${PR_NUMBER}/labels"
           AUTH_HEADER="Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}"
           echo $API_URL
+          echo $AUTH_HEADER
 
           if [ $(echo "$CHANGES" | wc -l) -le $SMALL_CHANGES_THRESHOLD ]; then
             echo "Adding label: small-changes"
