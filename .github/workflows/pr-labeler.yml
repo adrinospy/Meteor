@@ -1,0 +1,35 @@
+name: PR Labeler
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+
+jobs:
+  label_pr:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run labeler script
+        run: |
+          changed_lines=$(git diff --shortstat ${{ github.event.before }} ${{ github.sha }} | awk '{print $1 + $4}')
+          echo "Changed lines: $changed_lines"
+
+          # Add labels based on the number of changed lines
+          if [ $changed_lines -lt 50 ]; then
+            echo "Adding label: small-change"
+            gh pr label ${{ github.event.number }} add small-change
+          elif [ $changed_lines -lt 200 ]; then
+            echo "Adding label: medium-change"
+            gh pr label ${{ github.event.number }} add medium-change
+          else
+            echo "Adding label: large-change"
+            gh pr label ${{ github.event.number }} add large-change
+          fi
+
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
