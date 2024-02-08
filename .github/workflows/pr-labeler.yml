@@ -27,16 +27,10 @@ jobs:
 
           if [$CHANGES -le $TINY_THRESHOLD ]; then
             echo "Adding label: tiny"
-            curl -X POST -H "$AUTH_HEADER" -d '{"labels":["huge"]}' "$API_URL"
-            if gh pr view $PR_NUMBER --json labels | jq -e '.[] | select(.name == "tiny")' > /dev/null; then
-              echo "Label 'tiny' found, removing..."
-              gh pr label $PR_NUMBER -d huge
-            fi
+            curl -X POST -H "$AUTH_HEADER" -d '{"labels":["tiny"]}' "$API_URL"
+            curl -X DELETE -H "$AUTH_HEADER" "$API_URL/huge"
           else
             echo "Adding label: huge"
             curl -X POST -H "$AUTH_HEADER" -d '{"labels":["huge"]}' "$API_URL"
-            if gh pr view $PR_NUMBER --json labels | jq -e '.[] | select(.name == "tiny")' > /dev/null; then
-              echo "Label 'tiny' found, removing..."
-              gh pr label $PR_NUMBER -d tiny
-            fi
+            curl -X DELETE -H "$AUTH_HEADER" "$API_URL/tiny"
           fi
