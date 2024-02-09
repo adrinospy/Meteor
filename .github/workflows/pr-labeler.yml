@@ -18,6 +18,7 @@ jobs:
       - name: Run actions/checkout@v4
         uses: actions/checkout@v4
         with:
+          pull-requests: write
           fetch-depth: 0
 
       - name: Check changes and label
