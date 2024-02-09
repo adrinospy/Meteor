@@ -2,7 +2,7 @@
 # size is compared form firt to last commit in the pull request
 
 name: Size Labeler/Checker
-on: [ pull_request_target ]
+on: [ pull_request_target, pull_request ]
 jobs:
   label-changes:
     runs-on: ubuntu-latest
