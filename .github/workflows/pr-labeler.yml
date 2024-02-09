@@ -4,7 +4,7 @@
 name: Size Labeler/Checker
 
 on:
-  pull_request_target:
+  pull_request:
     types:
       - opened
       - synchronize
@@ -12,10 +12,13 @@ on:
 jobs:
   label-changes:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
     steps:
       - name: Run actions/checkout@v4
         uses: actions/checkout@v4
         with:
+          pull-requests: write
           fetch-depth: 0
 
       - name: Check changes and label
