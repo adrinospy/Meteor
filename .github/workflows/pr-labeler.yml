@@ -12,8 +12,6 @@ on:
 jobs:
   label-changes:
     runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
     steps:
       - name: Run actions/checkout@v4
         uses: actions/checkout@v4
