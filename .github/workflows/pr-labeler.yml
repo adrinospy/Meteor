@@ -2,15 +2,18 @@
 # size is compared form firt to last commit in the pull request
 
 name: Size Labeler/Checker
-on:
-  pull_request_target:
+on: [ pull_request_target ]
 jobs:
   label-changes:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
       - name: Run actions/checkout@v4
         uses: actions/checkout@v4
         with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
       - name: Check changes and label
