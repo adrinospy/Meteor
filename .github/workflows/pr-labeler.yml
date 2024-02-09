@@ -1,40 +1,13 @@
-name: Label Changes
+name: 🏷 PR size labeler
 
-on:
-  pull_request:
-    types:
-      - opened
-      - synchronize
+on: [pull_request]
 
 jobs:
-  label-changes:
+  pr-labeler:
     runs-on: ubuntu-latest
-
+    name: Label the PR size
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Check changes and add labels
-        run: |
-          CHANGES=$(git diff --stat --ignore-blank-lines ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | awk '{changes = strtonum($4) + strtonum($6)} END {print changes}')
-          echo "Changed files: $CHANGES"
-
-          TINY_THRESHOLD=50
-
-          PR_NUMBER="${{ github.event.number }}"
-          API_URL="https://api.github.com/repos/${{ github.repository }}/issues/${PR_NUMBER}/labels"
-          AUTH_HEADER="Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}"
-
-          if [ "$CHANGES" -le "$TINY_THRESHOLD" ]; then
-            LABEL="tiny"
-            DELETE_LABEL="huge"
-          else
-            LABEL="huge"
-            DELETE_LABEL="tiny"
-          fi
-
-          echo "Adding label: $LABEL"
-          curl -X POST -H "$AUTH_HEADER" -d "{\"labels\":[\"$LABEL\"]}" "$API_URL"
-          curl -X DELETE -H "$AUTH_HEADER" "$API_URL/$DELETE_LABEL"
+      - uses: BedrockStreaming/pr-size-labeler@v.0.0
+        with:         
+          token: ${{ secrets.GITHUB_TOKEN }}
+          exclude_files: .lock
