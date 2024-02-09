@@ -18,7 +18,7 @@ jobs:
 
       - name: Check changes and add labels
         run: |
-          CHANGES=$(git diff --stat -w -b -B -I ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | awk '{changes = strtonum($4) + strtonum($6)} END {print changes}')
+          CHANGES=$(git diff --stat --ignore-blank-lines ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | awk '{changes = strtonum($4) + strtonum($6)} END {print changes}')
           echo "Changed files: $CHANGES"
 
           TINY_THRESHOLD=50
