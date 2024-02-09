@@ -10,7 +10,9 @@ on:
 jobs:
   label-changes:
     runs-on: ubuntu-latest
-    
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
       - name: Check changes and label
         env:
