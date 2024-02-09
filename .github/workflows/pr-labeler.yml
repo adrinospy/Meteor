@@ -12,6 +12,9 @@ on:
 jobs:
   label-changes:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
 
     steps:
       - name: Run actions/checkout@v4
@@ -28,7 +31,7 @@ jobs:
 
           PR_NUMBER="${{ github.event.number }}"
           API_URL="https://api.github.com/repos/${{ github.repository }}/issues/${PR_NUMBER}/labels"
-          AUTH_HEADER="Authorization: Bearer ${{ secrets.GITHUB_TOKEN.write }}"
+          AUTH_HEADER="Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}"
 
           if [ "$CHANGES" -le "$THRESHOLD" ]; then
             LABEL="tiny"
