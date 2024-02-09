@@ -20,8 +20,6 @@ jobs:
           fetch-depth: 0
 
       - name: Check changes and label
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           CHANGES=$(git diff --stat -b ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | awk '{changes = strtonum($4) + strtonum($6)} END {print changes}')
           echo "Changed files: $CHANGES"
