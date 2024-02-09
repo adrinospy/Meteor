@@ -4,7 +4,7 @@
 name: Size Labeler/Checker
 
 on:
-  pull_request:
+  pull_request: [write]
         types: [opened, ready_for_review, synchronize, labeled, unlabeled]
 jobs:
   label-changes:
