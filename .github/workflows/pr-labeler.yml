@@ -1,3 +1,6 @@
+# set labels on Pull-Requests based on size of changes
+# size is compared form firt to last commit in the pull request
+
 name: Size Labeler/Checker
 on:
   pull_request_target:
@@ -8,21 +11,21 @@ jobs:
   label-changes:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      content: read
       pull-requests: write
     steps:
-      - name: Checkout code
+      - name: Run actions/checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.before }}
+          fetch-depth: 0
 
       - name: Check changes and label
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          CHANGES=$(git diff --stat -b ${{ github.event.before }} ${{ github.sha }} | awk '{changes = strtonum($4) + strtonum($6)} END {print changes}')
+          CHANGES=$(git diff --stat -b ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | awk '{changes = strtonum($4) + strtonum($6)} END {print changes}')
           echo "Changed files: $CHANGES"
-
+          echo $(git log --oneline)
           THRESHOLD=100
 
           PR_NUMBER="${{ github.event.number }}"
