@@ -5,7 +5,9 @@ name: Size Labeler/Checker
 
 on:
   pull_request_target:
-    types: [opened, ready_for_review, synchronize, labeled, unlabeled]
+    types:
+      - opened
+      - synchronize
 jobs:
   label-changes:
     runs-on: ubuntu-latest
