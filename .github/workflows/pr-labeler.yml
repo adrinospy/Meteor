@@ -1,33 +1,35 @@
-name: Label Changes
-
+name: Size Labeler/Checker
 on:
-  pull_request:
+  pull_request_target:
     types:
       - opened
       - synchronize
-
 jobs:
   label-changes:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          ref: ${{ github.event.before }}
 
-      - name: Check changes and add labels
+      - name: Check changes and label
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          CHANGES=$(git diff --stat --ignore-blank-lines ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | awk '{changes = strtonum($4) + strtonum($6)} END {print changes}')
+          CHANGES=$(git diff --stat -b ${{ github.event.before }} ${{ github.sha }} | awk '{changes = strtonum($4) + strtonum($6)} END {print changes}')
           echo "Changed files: $CHANGES"
 
-          TINY_THRESHOLD=50
+          THRESHOLD=100
 
           PR_NUMBER="${{ github.event.number }}"
           API_URL="https://api.github.com/repos/${{ github.repository }}/issues/${PR_NUMBER}/labels"
           AUTH_HEADER="Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}"
 
-          if [ "$CHANGES" -le "$TINY_THRESHOLD" ]; then
+          if [ "$CHANGES" -le "$THRESHOLD" ]; then
             LABEL="tiny"
             DELETE_LABEL="huge"
           else
