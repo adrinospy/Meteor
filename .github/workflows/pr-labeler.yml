@@ -17,7 +17,7 @@ jobs:
       - name: Run actions/checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: -1
 
       - name: Check changes and label
         env:
