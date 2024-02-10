@@ -11,12 +11,19 @@ jobs:
   label-changes:
     runs-on: ubuntu-latest
     permissions:
+      contents: read
       pull-requests: write
     steps:
+      - name: Run actions/checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Check changes and label
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          changed_files=${{ github.event.pull_request.changed_files }}
+          echo $changed_files
           CHANGES=$((${{github.event.pull_request.additions}} + ${{github.event.pull_request.deletions}}))
           echo "Changed files: $CHANGES"
 
