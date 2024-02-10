@@ -1,0 +1,32 @@
+name: Get Added Code
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+
+jobs:
+  get-added-code:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      # Add steps to fetch and process added code here
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Get Pull Request Details
+        run: |
+          PR_NUMBER=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+          PR_DETAILS=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          "https://api.github.com/repos/${{ github.repository }}/pulls/$PR_NUMBER")
+      - name: Extract Added Code
+        run: |
+          ADDED_FILES=$(echo "$PR_DETAILS" | jq -r '.files | map(select(.status == "added")) | .[].filename')
+      
+          # Process the added files as needed
+        
