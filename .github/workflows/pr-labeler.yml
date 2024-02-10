@@ -18,12 +18,33 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: main
+      - name: Get pull request diff
+        id: get-diff
+        run: |
+          diff_url="https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.number }}/diff"
+          diff_data=$(curl -sS -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" $diff_url)
+          echo "::set-output name=diff::${diff_data}"
+  
+      - name: Extract added lines
+        id: extract-lines
+        run: |
+          diff_data="${{ steps.get-diff.outputs.diff }}"
+          added_lines=$(echo "$diff_data" | jq -r '.[] | select(.status == "added") | .content')
+          echo "::set-output name=added_lines::${added_lines}"
+  
+      - name: Display added lines
+        run: |
+          added_lines="${{ steps.extract-lines.outputs.added_lines }}"
+          echo "Added Lines:"
+          echo "$added_lines"
       - name: Check changes and label
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          CHANGES=$(git diff --stat -b ${{ github.event.pull_request.head.sha }} ${{ github.sha }} | awk '{changes = strtonum($4) + strtonum($6)} END {print changes}')
+          diff_data="${{ steps.get-diff.outputs.diff }}"
+          echo "Pull Request Diff:"
+          echo "$diff_data"
+          CHANGES=$((${{github.event.pull_request.additions}} + ${{github.event.pull_request.deletions}}))
           echo "Changed files: $CHANGES"
 
           THRESHOLD=100
