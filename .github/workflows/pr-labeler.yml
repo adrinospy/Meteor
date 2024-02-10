@@ -18,23 +18,11 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: main
-      - name: Get changed files
-        id: changed-files
-        uses: tj-actions/changed-files@v42
-        with:
-          since_last_remote_commit: true
-      - name: Process files changed in the current commit
-        run: |
-          changedFiles=$(git diff --name-only HEAD^)
-          for file in $changedFiles; do
-            echo "Processing file: $file"
-          done
       - name: Check changes and label
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          CHANGES=$(git diff --stat -b ${{ github.event.pull_request.head.sha }} ${{ github.sha }} | awk '{changes = strtonum($4) + strtonum($6)} END {print changes}')
+          CHANGES=$((${{github.event.pull_request.additions}} + ${{github.event.pull_request.deletions}}))
           echo "Changed files: $CHANGES"
 
           THRESHOLD=100
