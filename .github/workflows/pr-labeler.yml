@@ -31,19 +31,18 @@ jobs:
 
           if [ "$CHANGES" -le "$MINIMAL_THRESHOLD" ]; then
             LABEL="minimal"
-          elif ["$CHANGES" -le "$SMALL_THRESHOLD"]; then
+          elif [ "$CHANGES" -le "$SMALL_THRESHOLD" ]; then
             LABEL="small"
-          elif ["$CHANGES" -le "$MODERATE_THRESHOLD"]; then
+          elif [ "$CHANGES" -le "$MODERATE_THRESHOLD" ]; then
             LABEL="moderate"
           else
-            LABLE="large"
+            LABEL="large"
           fi
-
-          echo "$DELETE_LABELS"
 
           DELETE_LABELS=("${DELETE_LABELS[@]/$LABEL}")
 
-          echo "$DELETE_LABELS"
+          echo "Modified array: ${DELETE_LABELS[@]}"
+
           echo "Adding label: $LABEL"
           curl -X POST -H "$AUTH_HEADER" -d "{\"labels\":[\"$LABEL\"]}" "$API_URL"
           for DELETE_LABEL in "${DELETE_LABELS[@]}"; do
