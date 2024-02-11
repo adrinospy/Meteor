@@ -39,6 +39,8 @@ jobs:
             LABLE="large"
           fi
 
+          echo "$DELETE_LABELS"
+
           DELETE_LABELS=("${DELETE_LABELS[@]/$LABEL}")
 
           echo "$DELETE_LABELS"
