@@ -34,10 +34,7 @@ const FlippableButton: React.FC<FlippableButtonProps> = ({ BfrTxt, AftTxt }) => 
   fs
   f
   dsf
-  sf
-  sd
-  fsda
-  f
+
   sdf
   sd
   fasd
