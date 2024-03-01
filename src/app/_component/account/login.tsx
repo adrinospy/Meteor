@@ -11,7 +11,10 @@ export default function LoginForm() {
   const [invalidCredentials, setCredentials] = useState(false);
   const loginUser = useLogin((state) => state.loginUser);
   const router = useRouter();
-
+  const [userData, setUserData] = useState({
+    email: "",
+    password: ""
+  });
   const handleSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault();
     axios.post("http://localhost:8080/auth/login", userData).then(
@@ -40,12 +43,6 @@ export default function LoginForm() {
       <div>
 
         <p className={`top-[-20px] ml-[10px] text-[16px] text-[#ff6468] z-10 ${invalidCredentials ? 'visible animate-shake animate-thrice animate-duration-200 animate-ease-linear' : 'hidden'}`}>Invalid Credentials!</p>
-        <div className="relative my-[10px]">
-          <input className="block px-2.5 pb-2.5 pt-4 w-full text-xl text-gray-500 rounded-lg border-1 border-gray-300 appearance-none focus:outline-none focus:ring-0 peer"
-            placeholder=" "
-            type="email"
-            value={userData.email}
-            onChange={(e) => setUserData({ ...userData, email: e.target.value })}
             required />
           <label className="absolute pointer-events-none text-xl text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-transparent px-2 peer-focus:px-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1">
             Email Address
