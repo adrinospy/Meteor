@@ -3,8 +3,8 @@
 name: Size Labeler/Checker
 on:
   pull_request_target:
-    branches:
-      - main
+    # branches:
+    #   - main
     types:
       - opened
       - ready_for_review
