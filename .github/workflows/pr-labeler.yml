@@ -47,14 +47,10 @@ jobs:
 
           DELETE_LABELS=("${DELETE_LABELS[@]//${LABEL}}")
 
-          echo "Modified array: ${DELETE_LABELS[@]}"
-
           echo "Adding label: $LABEL"
           curl -X POST -H "$AUTH_HEADER" -d "{\"labels\":[\"$LABEL\"]}" "$API_URL"
 
           for DELETE_LABEL in "${DELETE_LABELS[@]}"; do
-              echo "${DELETE_LABEL}"
               ENCODED_LABEL=$(echo "$DELETE_LABEL" | sed 's/ /%20/g')
               curl -X DELETE -H "$AUTH_HEADER" "$API_URL/$ENCODED_LABEL"
-              
           done
