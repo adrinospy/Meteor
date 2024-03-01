@@ -12,6 +12,8 @@ jobs:
       pull-requests: write
     steps:
       - name: Check changes and label
+        env:
+          GITHUB_TOKEN: ${{ env.TOKEN }}
         run: |
           CHANGES=$((${{github.event.pull_request.additions}} + ${{github.event.pull_request.deletions}}))
           echo "Changes Made: $CHANGES"
