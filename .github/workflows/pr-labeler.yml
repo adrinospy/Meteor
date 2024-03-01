@@ -20,14 +20,6 @@ jobs:
             echo "This is a draft pull request. Skipping the job."
             exit 78
           fi
-      - name: Check changing label not valid
-        run: |
-          labels_added_by_bot=$(echo "${{ github.event.pull_request.labels }}" | jq -r '.[] | select(.app.name == "github-actions") | .name')
-
-          if [ -n "$labels_added_by_bot" ]; then
-            echo "Label was added by the bot. Skipping the job."
-            exit 78
-          fi
       - name: Check changes and label
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
