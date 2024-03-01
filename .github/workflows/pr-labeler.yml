@@ -47,7 +47,7 @@ jobs:
             LABEL="v:%20large"
           fi
 
-          DELETE_LABELS=("${DELETE_LABELS[@]/$LABEL}")
+          DELETE_LABELS=("${DELETE_LABELS[@]//${LABEL}}")
 
           echo "Modified array: ${DELETE_LABELS[@]}"
 
