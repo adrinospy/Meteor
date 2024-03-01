@@ -1,3 +1,5 @@
+# set labels on Pull-Requests based on size of changes
+# size is compared form first to last commit in the pull request
 name: Size Labeler/Checker
 on:
   pull_request_target:
@@ -6,11 +8,14 @@ on:
       - synchronize
 jobs:
   label-changes:
+    if: github.event.pull_request.draft == 'false'
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
     steps:
       - name: Check changes and label
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           CHANGES=$((${{github.event.pull_request.additions}} + ${{github.event.pull_request.deletions}}))
           echo "Changes Made: $CHANGES"
