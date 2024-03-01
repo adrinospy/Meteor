@@ -17,7 +17,7 @@ jobs:
     permissions:
       pull-requests: write
     steps:
-      - name: Check changes and label
+      - name: Size Labeler/Checker
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
