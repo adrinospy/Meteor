@@ -65,18 +65,6 @@ export default function LoginForm() {
             required />
           <label className="absolute pointer-events-none text-xl text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-transparent px-2 peer-focus:px-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1">Password:</label>
           <button type="button" className="mr-[45px]" onClick={() => { handleShowPassword(!showPassword) }}>
-            {showPassword ? <IoEye style={{ height: '20px', width: "20px" }} fill={'#6b7280'} /> : <IoEyeOff style={{ height: '20px', width: "20px" }} fill={'#6b7280'} />}
-          </button>
-          <label className="absolute pointer-events-none text-xl text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-transparent px-2 peer-focus:px-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1">Password:</label>
-        </div>
-        </div>
-        <div className="flex justify-between my-3">
-
-          <button
-            className="w-[150px] text-white bg-[#6534d9] hover:bg-[#3f3f3c] focus:outline-none focus:ring-4 font-medium rounded-lg text-xl px-5 py-2.5 text-center me-2 mb-2"
-            type="submit"
-            onSubmit={handleSubmit}
-          >Login
           </button>
         </div>
       </div>
