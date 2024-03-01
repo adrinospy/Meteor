@@ -11,7 +11,14 @@ export default function LoginForm() {
   const [invalidCredentials, setCredentials] = useState(false);
   const loginUser = useLogin((state) => state.loginUser);
   const router = useRouter();
-  const [userData, setUserData] = useState({
+
+  const handleSubmit = useCallback((e: React.FormEvent) => {
+    e.preventDefault();
+    axios.post("http://localhost:8080/auth/login", userData).then(
+      () => {
+        loginUser();
+        router.push('/')
+      }
     ).catch((error) => {
       if (error.message === "Request failed with status code 400") {
         setCredentials(true)
