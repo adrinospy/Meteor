@@ -35,16 +35,16 @@ jobs:
           API_URL="https://api.github.com/repos/${{ github.repository }}/issues/${PR_NUMBER}/labels"
           AUTH_HEADER="Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}"
 
-          DELETE_LABELS=("v: minimal" "v: small" "v: moderate" "v: large")
+          DELETE_LABELS=("v:%20minimal" "v:%20small" "v:%20moderate" "v:%20large")
 
           if [ "$CHANGES" -le "$MINIMAL_THRESHOLD" ]; then
-            LABEL="v: minimal"
+            LABEL="v:%20minimal"
           elif [ "$CHANGES" -le "$SMALL_THRESHOLD" ]; then
-            LABEL="v: small"
+            LABEL="v:%20small"
           elif [ "$CHANGES" -le "$MODERATE_THRESHOLD" ]; then
-            LABEL="v: moderate"
+            LABEL="v:%20moderate"
           else
-            LABEL="v: large"
+            LABEL="v:%20large"
           fi
 
           DELETE_LABELS=("${DELETE_LABELS[@]/$LABEL}")
