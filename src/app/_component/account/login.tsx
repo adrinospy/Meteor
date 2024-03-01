@@ -69,9 +69,6 @@ export default function LoginForm() {
           </button>
           <label className="absolute pointer-events-none text-xl text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-transparent px-2 peer-focus:px-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1">Password:</label>
         </div>
-        <div className="my-6 flex flex-row align-middle justify-between">
-          <div className="flex items-center mb-4 ml-3">
-            <input type="checkbox" value="" className="w-4 h-4 border-r-4 bg-gray-100 border-gray-300 rounded focus:ring-2" />
         </div>
         <div className="flex justify-between my-3">
 
