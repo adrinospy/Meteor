@@ -12,7 +12,6 @@ on:
 jobs:
   label-changes:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.draft == false
     timeout-minutes: 2
     permissions:
       pull-requests: write
@@ -53,11 +52,3 @@ jobs:
               ENCODED_LABEL=$(echo "$DELETE_LABEL" | sed 's/ /%20/g')
               curl -X DELETE -H "$AUTH_HEADER" "$API_URL/$ENCODED_LABEL"
           done
-          
-  draft-build:
-    runs-on: ubuntu-latest
-    if: github.event.pull_request.draft == true
-    timeout-minutes: 1
-    steps:
-      - name: Draft PR
-        run:  echo "Draft Pull Request, Skipping Jobs."
