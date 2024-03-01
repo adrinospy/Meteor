@@ -39,8 +39,6 @@ export default function LoginForm() {
         <div className="absolute text-6xl text-[#34374d] flex flex-col justify-center">
           Welcome Back!
           <span className="text-xl mt-4">Please Log in to you account.</span>
-        </div>
-      </div>
       <div>
 
         <p className={`top-[-20px] ml-[10px] text-[16px] text-[#ff6468] z-10 ${invalidCredentials ? 'visible animate-shake animate-thrice animate-duration-200 animate-ease-linear' : 'hidden'}`}>Invalid Credentials!</p>
