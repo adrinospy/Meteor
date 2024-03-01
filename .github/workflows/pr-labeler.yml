@@ -13,12 +13,11 @@ jobs:
   label-changes:
     runs-on: ubuntu-latest
     if: github.event.pull_request.draft == false
+    timeout-minutes: 2
     permissions:
       pull-requests: write
     steps:
       - name: Check changes and label
-        
-
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
