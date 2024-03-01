@@ -52,3 +52,9 @@ jobs:
               ENCODED_LABEL=$(echo "$DELETE_LABEL" | sed 's/ /%20/g')
               curl -X DELETE -H "$AUTH_HEADER" "$API_URL/$ENCODED_LABEL"
           done
+          
+          PR_NUMBER=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+          LABEL_NAME=$(jq --raw-output .label.name "$GITHUB_EVENT_PATH")
+          USER_LOGIN=$(jq --raw-output .sender.login "$GITHUB_EVENT_PATH")
+
+          echo "Label '$LABEL_NAME' added to Pull Request #$PR_NUMBER by $USER_LOGIN"
