@@ -11,8 +11,8 @@ on:
       - ready_for_review
 jobs:
   label-changes:
-    runs-on: ubuntu-latest
     if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
     timeout-minutes: 2
     permissions:
       pull-requests: write
