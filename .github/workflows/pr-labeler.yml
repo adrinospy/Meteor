@@ -12,16 +12,13 @@ on:
 jobs:
   label-changes:
     runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
     permissions:
       pull-requests: write
     steps:
-      - name: Check for draft pull request
-        run: |
-          if [ "${{ github.event.pull_request.draft }}" == "true" ]; then
-            echo "This is a draft pull request. Skipping the job."
-            exit 78
-          fi
       - name: Check changes and label
+        
+
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
