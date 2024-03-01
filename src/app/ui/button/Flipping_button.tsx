@@ -20,6 +20,36 @@ const FlippableButton: React.FC<FlippableButtonProps> = ({ BfrTxt, AftTxt }) => 
       <h1 className="font-extrabold justify-center mt-[-82px]">{AftTxt}</h1>
     </button>
   );
+  fs
+  df
+  s
+  fs
+  fs
+  df
+  sd
+  fs
+  f
+  sf
+  s
+  fs
+  f
+  dsf
+  sf
+  sd
+  fsda
+  f
+  sdf
+  sd
+  fasd
+  f
+  sdf
+  asd
+  fsd
+  fa
+  as
+  f
+  das
+  fsdaf
 }
 
 export default FlippableButton;
