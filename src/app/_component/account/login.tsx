@@ -72,9 +72,6 @@ export default function LoginForm() {
         <div className="my-6 flex flex-row align-middle justify-between">
           <div className="flex items-center mb-4 ml-3">
             <input type="checkbox" value="" className="w-4 h-4 border-r-4 bg-gray-100 border-gray-300 rounded focus:ring-2" />
-            <label className="ms-2 text-sm font-medium text-gray-500">Remember me</label>
-          </div>
-          <label className="text-[#ff6468] mr-[45px]">Forgot Password?</label>
         </div>
         <div className="flex justify-between my-3">
 
