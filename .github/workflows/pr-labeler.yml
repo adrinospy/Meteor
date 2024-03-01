@@ -8,6 +8,7 @@ on:
     types:
       - opened
       - synchronize
+      - ready_for_review
 jobs:
   label-changes:
     runs-on: ubuntu-latest
