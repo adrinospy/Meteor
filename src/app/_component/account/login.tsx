@@ -15,6 +15,7 @@ export default function LoginForm() {
     email: "",
     password: ""
   });
+
   const handleSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault();
     axios.post("http://localhost:8080/auth/login", userData).then(
@@ -74,7 +75,13 @@ export default function LoginForm() {
             <label className="ms-2 text-sm font-medium text-gray-500">Remember me</label>
           </div>
           <label className="text-[#ff6468] mr-[45px]">Forgot Password?</label>
-        </div>
-        <div className="flex justify-between my-3">
 
           <button
+            className="w-[150px] text-white bg-[#6534d9] hover:bg-[#3f3f3c] focus:outline-none focus:ring-4 font-medium rounded-lg text-xl px-5 py-2.5 text-center me-2 mb-2"
+            type="submit"
+            onSubmit={handleSubmit}
+          >Login
+          </button>
+        </div>
+      </div>
+    </form>
