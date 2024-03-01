@@ -11,9 +11,9 @@ on:
       - ready_for_review
 jobs:
   label-changes:
-    if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
-    timeout-minutes: 2
+    if: github.event.pull_request.draft == false
+    timeout-minutes: 1
     permissions:
       pull-requests: write
     steps:
@@ -50,13 +50,6 @@ jobs:
           curl -X POST -H "$AUTH_HEADER" -d "{\"labels\":[\"$LABEL\"]}" "$API_URL"
 
           for DELETE_LABEL in "${DELETE_LABELS[@]}"; do
-          ENCODED_LABEL=$(echo "$DELETE_LABEL" | sed 's/ /%20/g')
-          # Check if label exists before attempting to delete
-          curl -X GET -H "$AUTH_HEADER" "$API_URL/$ENCODED_LABEL" > /dev/null 2>&1
-          if [ $? -eq 0 ]; then
-            # Label exists, proceed with deletion
-            curl -X DELETE -H "$AUTH_HEADER" "$API_URL/$ENCODED_LABEL"
-          else
-            echo "Label does not exist: $DELETE_LABEL"
-          fi
+              ENCODED_LABEL=$(echo "$DELETE_LABEL" | sed 's/ /%20/g')
+              curl -X DELETE -H "$AUTH_HEADER" "$API_URL/$ENCODED_LABEL"
           done
