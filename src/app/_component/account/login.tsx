@@ -78,8 +78,6 @@ export default function LoginForm() {
 
           <button
             className="w-[150px] text-white bg-[#6534d9] hover:bg-[#3f3f3c] focus:outline-none focus:ring-4 font-medium rounded-lg text-xl px-5 py-2.5 text-center me-2 mb-2"
-            type="submit"
-            onSubmit={handleSubmit}
           >Login
           </button>
         </div>
