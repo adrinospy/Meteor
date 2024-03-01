@@ -57,5 +57,6 @@ jobs:
           for DELETE_LABEL in "${DELETE_LABELS[@]}"; do
               echo "${DELETE_LABEL}"
               DELETE_LABEL=$(echo "$DELETELABEL" | sed 's/ /%20/g')
+              echo "$AUTH_HEADER $API_URL/$DELETE_LABEL"
               curl -X DELETE -H "$AUTH_HEADER" "$API_URL/$DELETE_LABEL"
           done
