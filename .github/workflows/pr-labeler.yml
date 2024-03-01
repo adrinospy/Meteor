@@ -6,14 +6,11 @@ on:
       - synchronize
 jobs:
   label-changes:
-    if: github.event.pull_request.draft == 'false'
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
     steps:
       - name: Check changes and label
-        env:
-          GITHUB_TOKEN: ${{ env.TOKEN }}
         run: |
           CHANGES=$((${{github.event.pull_request.additions}} + ${{github.event.pull_request.deletions}}))
           echo "Changes Made: $CHANGES"
