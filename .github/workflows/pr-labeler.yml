@@ -1,23 +1,16 @@
-# set labels on Pull-Requests based on size of changes
-# size is compared form first to last commit in the pull request
 name: Size Labeler/Checker
 on:
   pull_request_target:
-    # branches:
-    #   - main
     types:
       - opened
       - synchronize
-      - ready_for_review
 jobs:
   label-changes:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.draft == false
-    timeout-minutes: 1
     permissions:
       pull-requests: write
     steps:
-      - name: Size Labeler/Checker
+      - name: Check changes and label
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
