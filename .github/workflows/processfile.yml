@@ -16,7 +16,7 @@ jobs:
         fetch-depth: 0
     - name: Count added non-blank lines
       run: |
-        git diff ${{ github.event.pull_request.head.sha }} ${{ github.event.pull_request.base.sha }} | grep -vE '^\+\+\+' | grep -E '^\+' | grep -vE '^\+\s*$' 
+        git diff --ignore-all-space -w --ignore-space-at-eol ${{ github.event.pull_request.head.sha }} ${{ github.event.pull_request.base.sha }} | grep -vE '^\+\+\+' | grep -E '^\+' | grep -vE '^\+\s*$' 
         # Access the list of changed files from the previous step
         files_changed="${{ steps.file_changes.outputs.files_changed }}"
         # Loop through the changed files and run the specified command

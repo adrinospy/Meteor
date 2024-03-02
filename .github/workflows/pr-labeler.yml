@@ -14,10 +14,17 @@ jobs:
     permissions:
       pull-requests: write
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Check changes and label
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          git diff --ignore-all-space -w --ignore-space-at-eol ${{ github.event.pull_request.head.sha }} ${{ github.event.pull_request.base.sha }} | grep -vE '^[+-]{3}|\+[\s]*$' | grep -E '^[+-]' | wc -l
+
           CHANGES=$((${{github.event.pull_request.additions}} + ${{github.event.pull_request.deletions}}))
           echo "Changes Made: $CHANGES"
 
