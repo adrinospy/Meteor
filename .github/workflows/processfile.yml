@@ -1,38 +1,38 @@
-name: Get Lines Added/Deleted (Ignoring Blank Lines)
+name: Count Added Non-Blank Lines
 
 on:
   pull_request:
+    paths:
+      - '**/*'
 
 jobs:
-  get_lines_changed:
+  count_added_lines:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Get lines added/deleted
+    - name: Get changed files
+      id: file_changes
       run: |
-        # Fetch pull request details using GitHub API
-        pr_details=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-          "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.number }}")
+        # Fetch the base branch
+        git fetch origin ${{ github.event.before }}
+        
+        # Get the list of changed files
+        files_changed=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
 
-        # Extract file details
-        files=$(echo "$pr_details" | jq -r '.files')
+        # Output the list of changed files
+        echo "::set-output name=files_changed::$files_changed"
 
-        # Initialize counters for added and deleted lines
-        added_lines=0
-        deleted_lines=0
+    - name: Count added non-blank lines
+      run: |
+        git show ${{ github.event.pull_request.head.sha }} ${{ github.event.pull_request.base.sha }} | grep -vE '^\+\+\+' | grep -E '^\+' | grep -vE '^\+\s*$'
+        # Access the list of changed files from the previous step
+        files_changed="${{ steps.file_changes.outputs.files_changed }}"
 
-        # Loop through files and count lines (ignoring blank lines)
-        for file in $(echo "$files" | jq -r '.[].filename'); do
-          additions=$(git show ${{ github.sha }}:"$file" | grep -E '^\+' | grep -vE '^\+\s*$' | wc -l)
-          deletions=$(git show ${{ github.event.before }}:"$file" | grep -E '^\-' | grep -vE '^\-\s*$' | wc -l)
+        # Loop through the changed files and run the specified command
+        IFS=$'\n' # Set Internal Field Separator to newline
+          echo "Counting added non-blank lines in $file"
           
-          added_lines=$((added_lines + additions))
-          deleted_lines=$((deleted_lines + deletions))
-        done
-
-        # Output the results
-        echo "Added lines: $added_lines"
-        echo "Deleted lines: $deleted_lines"
+          # Run the specified command on each changed file
