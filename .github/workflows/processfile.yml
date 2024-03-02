@@ -17,11 +17,12 @@ jobs:
 
     - name: Count added non-blank lines
       run: |
-        git show ${{ github.sha }} ${{ github.event.before }} | grep -vE '^\+\+\+' | grep -E '^\+' | grep -vE '^\+\s*$'
+        git show ${{ github.event.pull_request.head.sha }} ${{ github.event.pull_request.base.sha }} | grep -vE '^\+\+\+' | grep -E '^\+' | grep -vE '^\+\s*$'
         # Access the list of changed files from the previous step
         files_changed="${{ steps.file_changes.outputs.files_changed }}"
 
         # Loop through the changed files and run the specified command
         IFS=$'\n' # Set Internal Field Separator to newline
           echo "Counting added non-blank lines in $file"
-
+          
+          # Run the specified command on each changed file
