@@ -1,16 +1,49 @@
-on: pull_request
+name: Process Pull Request
+
+on:
+  pull_request:
+    paths:
+      - '**/*'
+
 jobs:
-  process-last-commit-changes:
+  process_changes:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout (fetch last two commits) of the PR
-        uses: actions/checkout@v3
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 2
-      - name: Process files changed in the current commit
-        run: |
-          changedFiles=$(git diff --name-only HEAD^)
-          for file in $changedFiles; do
-            echo "Processing file: $file"
-          done
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Get file changes
+      id: file_changes
+      run: |
+        # Fetch the base branch
+        git fetch origin ${{ github.event.before }}
+        
+        # Get the list of changed files
+        files_changed=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
+
+        # Output the list of changed files
+        echo "::set-output name=files_changed::$files_changed"
+
+    - name: Process file changes
+      run: |
+        # Access the list of changed files from the previous step
+        files_changed="${{ steps.file_changes.outputs.files_changed }}"
+
+        # Initialize counters for added and deleted lines
+        added_lines=0
+        deleted_lines=0
+
+        # Loop through the changed files and count lines
+        IFS=$'\n' # Set Internal Field Separator to newline
+        for file in $files_changed; do
+          # Count added lines (ignoring whitespace changes)
+          added_lines=$((added_lines + $(git diff -U0 --ignore-blank-lines --ignore-space-at-eol --ignore-space-change ${{ github.event.before }} ${{ github.sha }} -- "$file" | grep -c '^+[^+]')))
+
+          # Count deleted lines (ignoring whitespace changes)
+          deleted_lines=$((deleted_lines + $(git diff -U0 --ignore-blank-lines --ignore-space-at-eol --ignore-space-change ${{ github.event.before }} ${{ github.sha }} -- "$file" | grep -c '^-[^-]')))
+        done
+
+        # Output the results
+        echo "Added lines: $added_lines"
+        echo "Deleted lines: $deleted_lines"
