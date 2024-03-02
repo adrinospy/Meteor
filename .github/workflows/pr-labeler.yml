@@ -1,5 +1,3 @@
-# set labels on Pull-Requests based on size of changes
-# size is compared form first to last commit in the pull request
 name: Size Labeler/Checker
 on:
   pull_request_target:
@@ -52,20 +50,3 @@ jobs:
               ENCODED_LABEL=$(echo "$DELETE_LABEL" | sed 's/ /%20/g')
               curl -X DELETE -H "$AUTH_HEADER" "$API_URL/$ENCODED_LABEL"
           done
-
-          
-          PR_NUMBER=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-          LABEL_NAME=$(jq --raw-output .label.name "$GITHUB_EVENT_PATH")
-
-          # Get the list of events related to the pull request
-          EVENTS=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-                     -H "Accept: application/vnd.github.v3+json" \
-                     "https://api.github.com/repos/${{ github.repository }}/issues/${PR_NUMBER}/events")
-
-          # Find the event where the label was added
-          LABEL_EVENT=$(echo "$EVENTS" | jq --arg label "$LABEL_NAME" -c '.[] | select(.event == "labeled" and .label.name == $label)')
-
-          # Extract the user who added the label
-          USER_LOGIN=$(echo "$LABEL_EVENT" | jq --raw-output .actor_login)
-
-          echo "Label '$LABEL_NAME' added to Pull Request #$PR_NUMBER by $USER_LOGIN"
