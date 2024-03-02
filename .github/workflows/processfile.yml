@@ -1,47 +1,36 @@
-name: Process Pull Request
+name: Get Lines Added/Deleted (Ignoring Blank Lines)
 
 on:
   pull_request:
-    paths:
-      - '**/*'
 
 jobs:
-  process_changes:
+  get_lines_changed:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Get file changes
-      id: file_changes
+    - name: Get lines added/deleted
       run: |
-        # Fetch the base branch
-        git fetch origin ${{ github.event.before }}
-        
-        # Get the list of changed files
-        files_changed=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
+        # Fetch pull request details using GitHub API
+        pr_details=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.number }}")
 
-        # Output the list of changed files
-        echo "::set-output name=files_changed::$files_changed"
-
-    - name: Process file changes
-      run: |
-        # Access the list of changed files from the previous step
-        files_changed="${{ steps.file_changes.outputs.files_changed }}"
+        # Extract file details
+        files=$(echo "$pr_details" | jq -r '.files')
 
         # Initialize counters for added and deleted lines
         added_lines=0
         deleted_lines=0
 
-        # Loop through the changed files and count lines
-        IFS=$'\n' # Set Internal Field Separator to newline
-        for file in $files_changed; do
-          # Count added lines (ignoring whitespace changes)
-          added_lines=$((added_lines + $(git diff -U0 --ignore-blank-lines --ignore-space-at-eol --ignore-space-change ${{ github.event.before }} ${{ github.sha }} -- "$file" | grep -c '^+[^+]')))
-
-          # Count deleted lines (ignoring whitespace changes)
-          deleted_lines=$((deleted_lines + $(git diff -U0 --ignore-blank-lines --ignore-space-at-eol --ignore-space-change ${{ github.event.before }} ${{ github.sha }} -- "$file" | grep -c '^-[^-]')))
+        # Loop through files and count lines (ignoring blank lines)
+        for file in $(echo "$files" | jq -r '.[].filename'); do
+          additions=$(git show ${{ github.sha }}:"$file" | grep -E '^\+' | grep -vE '^\+\s*$' | wc -l)
+          deletions=$(git show ${{ github.event.before }}:"$file" | grep -E '^\-' | grep -vE '^\-\s*$' | wc -l)
+          
+          added_lines=$((added_lines + additions))
+          deleted_lines=$((deleted_lines + deletions))
         done
 
         # Output the results
