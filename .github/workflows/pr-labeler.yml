@@ -64,6 +64,7 @@ jobs:
             -d "{\"labels\":[\"$LABEL\"]}" \
             "$API_URL" >/dev/null
 
+          echo "Deleting Labels: $DELETE_LABELS"
           for DELETE_LABEL in "${DELETE_LABELS[@]}"; do
               ENCODED_LABEL=$(echo "$DELETE_LABEL" | sed 's/ /%20/g')
               curl -X DELETE \
