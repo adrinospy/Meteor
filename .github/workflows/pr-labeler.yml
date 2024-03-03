@@ -14,18 +14,18 @@ jobs:
     permissions:
       pull-requests: write
     steps:
-      - name: Checkout the code
-        uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
 
       - name: Check changes and label
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git fetch origin ${{ github.base_ref }}
-          git diff ${{ github.event.pull_request.head.sha }} ${{ github.event.pull_request.base.sha }}
+          CHANGES = $(git diff ${{ github.event.pull_request.head }} ${{ github.event.before }})
+          CHANGES = $($CHANGES | grep -E '^[+\-]' | grep -vE '^\+\+\+|^\-\-\-' | wc -l)
 
-          CHANGES=$((${{github.event.pull_request.additions}} + ${{github.event.pull_request.deletions}}))
-          echo "Changes Made: $CHANGES"
 
           MINIMAL_THRESHOLD=50
           SMALL_THRESHOLD=100
@@ -56,5 +56,3 @@ jobs:
               ENCODED_LABEL=$(echo "$DELETE_LABEL" | sed 's/ /%20/g')
               curl -X DELETE -H "$AUTH_HEADER" "$API_URL/$ENCODED_LABEL"
           done
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
