@@ -26,7 +26,7 @@ jobs:
           CHANGES=$(git diff ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }})
           echo $CHANGES
           CHANGES=$(echo "$CHANGES" | grep -E '^[+\-]' | grep -vE '^\+\+\+|^\-\-\-' | wc -l)
-
+          echo "no of changes $CHANGES"
 
           MINIMAL_THRESHOLD=50
           SMALL_THRESHOLD=100
