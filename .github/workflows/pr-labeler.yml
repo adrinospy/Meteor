@@ -24,11 +24,18 @@ jobs:
         run: |
           git fetch origin ${{ github.base_ref }}
           CHANGES=$(git diff ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }})
-          echo $CHANGES
-          CHANGES=$(echo "$CHANGES" | grep -E '^[+\-]' | grep -vE '^\+\+\+|^\-\-\-' | wc -l)
-          echo "no of changes $CHANGES"
+          CHANGES=$(echo "$CHANGES" | grep -E '^[+\-]' | grep -vE '^\+\+\+|^\-\-\-')
+
+          # ignore blank lines
+          CHANGES=$(echo "$CHANGES" | grep -vE '^[\+\-]\s*$')
+
+          # count total no of lines
+          CHANGES=$(echo "$CHANGES" | wc -l)
+
+          echo "CHANGES MADE: $CHANGES"
 
           MINIMAL_THRESHOLD=50
+
           SMALL_THRESHOLD=100
           MODERATE_THRESHOLD=300
 
