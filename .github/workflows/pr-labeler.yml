@@ -59,8 +59,7 @@ jobs:
           DELETE_LABELS=("${DELETE_LABELS[@]//${LABEL}}")
 
           echo "Adding label: $LABEL"
-          curl -L \
-            -X POST \
+          curl -X POST \
             -H "Accept: application/vnd.github+json" \
             -H "$AUTH_HEADER" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
@@ -71,8 +70,7 @@ jobs:
               # encode labels for having space
               ENCODED_LABEL=$(echo "$DELETE_LABEL" | sed 's/ /%20/g')
 
-          curl -L \
-            -X DELETE \
+          curl -X DELETE \
             -H "Accept: application/vnd.github+json" \
             -H "$AUTH_HEADER" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
