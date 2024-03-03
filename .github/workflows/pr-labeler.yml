@@ -22,7 +22,7 @@ jobs:
       - name: Check changes and label
         run: |
           git fetch origin ${{ github.base_ref }}
-          git diff ${{ github.event.pull_request.head }} ${{ github.event.before }}
+          git diff ${{ github.event.pull_request.head.sha }} ${{ github.event.pull_request.base.sha }}
 
           CHANGES=$((${{github.event.pull_request.additions}} + ${{github.event.pull_request.deletions}}))
           echo "Changes Made: $CHANGES"
