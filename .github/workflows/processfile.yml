@@ -1,7 +1,7 @@
 name: Count Added Non-Blank Lines
 
 on:
-  pull_request_target:
+  pull_request:
     paths:
       - '**/*'
 
@@ -15,6 +15,8 @@ jobs:
       with:
         fetch-depth: 0
     - name: Count added non-blank lines
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         git diff ${{ github.event.before }} ${{ github.sha }} | grep -E '^[+\-]' | grep -vE '^\+\+\+|^\-\-\-' | wc -l
         CHANGES=$(git diff ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | grep -E '^[+\-]' | grep -vE '^\+\+\+|^\-\-\-' | wc -l )
