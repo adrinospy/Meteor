@@ -40,7 +40,8 @@ jobs:
           MODERATE_THRESHOLD=300
 
           PR_NUMBER="${{ github.event.number }}"
-          API_URL="https://api.github.com/repos/${{ github.repository }}/issues/${PR_NUMBER}/labels"
+          REPO="${{ github.repository }}"
+          API_URL="https://api.github.com/repos/${REPO}/issues/${PR_NUMBER}/labels"
           AUTH_HEADER="Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}"
 
           DELETE_LABELS=("v: minimal" "v: small" "v: moderate" "v: large")
@@ -63,7 +64,8 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: Bearer $AUTH_HEADER" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
-            -d "{\"labels\":[\"$LABEL\"]}" "$API_URL" > /dev/null
+            "$API_URL" \
+            -d "{\"labels\":[\"$LABEL\"]}" > /dev/null
 
           for DELETE_LABEL in "${DELETE_LABELS[@]}"; do
               # encode labels for having space
