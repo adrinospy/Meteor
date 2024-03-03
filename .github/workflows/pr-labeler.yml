@@ -6,11 +6,6 @@ on:
       - opened
       - reopened
       - synchronize
-  pull_request:
-    types:
-      - opened
-      - reopened
-      - synchronize
 
 jobs:
   label-changes:
@@ -20,8 +15,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Check changes and label
         env:
