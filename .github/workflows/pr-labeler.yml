@@ -24,7 +24,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git diff ${{ github.event.pull_request.head }} ${{ github.event.before }}
+          git diff ${{ github.event.pull_request_target.head.sha }} ${{ github.event.pull_request_target.base.ref }}
 
           CHANGES=$((${{github.event.pull_request.additions}} + ${{github.event.pull_request.deletions}}))
           echo "Changes Made: $CHANGES"
