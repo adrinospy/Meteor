@@ -23,7 +23,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          CHANGES = $(git diff ${{ github.event.pull_request.head }} ${{ github.event.before }})
+          CHANGES = $(git diff ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }})
           CHANGES = $($CHANGES | grep -E '^[+\-]' | grep -vE '^\+\+\+|^\-\-\-' | wc -l)
 
 
