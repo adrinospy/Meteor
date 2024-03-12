@@ -18,7 +18,7 @@ jobs:
 
       - name: Add labels based on size
         run: |
-          if [[ -z "${{ secrets.GITHUB_TOKEN }}" || -z "${{ secrets.SMALL_THRESHOLD }}" || -z "${{ secrets.MODERATE_THRESHOLD }}" || -z "${{ secrets.LARGE_THRESHOLD }}" ]]; then
+          if [[ -z "${{ vars.SMALL_THRESHOLD }}" || -z "${{ vars.MODERATE_THRESHOLD }}" || -z "${{ vars.LARGE_THRESHOLD }}" ]]; then
               echo "One or more environment variables are not set."
               exit 1
             fi
