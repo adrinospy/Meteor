@@ -19,6 +19,7 @@ jobs:
       - name: Add labels based on size
         run: |
           echo ${{ vars.SMALL_THRESHOLD }}
+
           if [[ -z "${{ vars.SMALL_THRESHOLD }}" || -z "${{ vars.MODERATE_THRESHOLD }}" || -z "${{ vars.LARGE_THRESHOLD }}" ]]; then
               echo "One or more environment variables are not set."
               exit 1
@@ -37,9 +38,9 @@ jobs:
 
           echo "CHANGES MADE: $CHANGES"
 
-          SMALL_THRESHOLD=$(${{vars.SMALL_THRESHOLD}})
-          MODERATE_THRESHOLD=$(${{vars.MODERATE_THRESHOLD}})
-          LARGE_THRESHOLD=$(${{vars.LARGE_THRESHOLD}})
+          SMALL_THRESHOLD=${{vars.SMALL_THRESHOLD}}
+          MODERATE_THRESHOLD=${{vars.MODERATE_THRESHOLD}}
+          LARGE_THRESHOLD=${{vars.LARGE_THRESHOLD}}
 
           PR_NUMBER="${{ github.event.number }}"
           API_URL="https://api.github.com/repos/${{ github.repository }}/issues/${PR_NUMBER}/labels"
