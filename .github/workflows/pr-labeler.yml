@@ -18,6 +18,7 @@ jobs:
 
       - name: Add labels based on size
         run: |
+          echo ${{ vars.SMALL_THRESHOLD }}
           if [[ -z "${{ vars.SMALL_THRESHOLD }}" || -z "${{ vars.MODERATE_THRESHOLD }}" || -z "${{ vars.LARGE_THRESHOLD }}" ]]; then
               echo "One or more environment variables are not set."
               exit 1
