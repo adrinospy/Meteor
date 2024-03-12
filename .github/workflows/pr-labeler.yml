@@ -5,24 +5,33 @@ on:
       - opened
       - synchronize
       - edited
-      - reopened
-      - synchronize
-      - ready_for_review
 jobs:
+  check-environment-variables:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checking for environment variables
+        run: |
+          if [[ -z "${{ secrets.GITHUB_TOKEN }}" || -z "${{ secrets.SMALL_THRESHOLD }}" || -z "${{ secrets.MODERATE_THRESHOLD }}" || -z "${{ secrets.LARGE_THRESHOLD }}" ]]; then
+            echo "One or more environment variables are not set."
+            exit 1
+          fi
+
   label-changes:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
     steps:
-      - name: Checkout the code
+      - name: Checkout code
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
-      - name: Check changes and label
+      - name: Add labels based on size
         run: |
           git fetch origin ${{ github.base_ref }}
           CHANGES=$(git diff --ignore-all-space ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }})
+
           CHANGES=$(echo "$CHANGES" | grep -E '^[+\-]' | grep -vE '^\+\+\+|^\-\-\-')
 
           # ignore blank lines
@@ -33,29 +42,25 @@ jobs:
 
           echo "CHANGES MADE: $CHANGES"
 
-          MINIMAL_THRESHOLD=50
-
-          SMALL_THRESHOLD=100
-          MODERATE_THRESHOLD=300
+          SMALL_THRESHOLD=$(${{vars.SMALL_THRESHOLD}})
+          MODERATE_THRESHOLD=$(${{vars.MODERATE_THRESHOLD}})
+          LARGE_THRESHOLD=$(${{vars.LARGE_THRESHOLD}})
 
           PR_NUMBER="${{ github.event.number }}"
           API_URL="https://api.github.com/repos/${{ github.repository }}/issues/${PR_NUMBER}/labels"
           AUTH_HEADER="Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}"
-
           DELETE_LABELS=("v: minimal" "v: small" "v: moderate" "v: large")
-
-          if [ "$CHANGES" -le "$MINIMAL_THRESHOLD" ]; then
-            LABEL="v: minimal"
-          elif [ "$CHANGES" -le "$SMALL_THRESHOLD" ]; then
+          if [ "$CHANGES" -gt "$SMALL_THRESHOLD" ]; then
             LABEL="v: small"
-          elif [ "$CHANGES" -le "$MODERATE_THRESHOLD" ]; then
+          elif [ "$CHANGES" -gt "$MODERATE_THRESHOLD" ]; then
             LABEL="v: moderate"
-          else
+          elif [ "$CHANGES" -gt "$LARGE_THRESHOLD" ]; then
             LABEL="v: large"
+          else
+            LABEL="v: minimal"
           fi
 
           DELETE_LABELS=("${DELETE_LABELS[@]//${LABEL}}")
-
           echo "Adding label: $LABEL"
           curl -X POST \
             -H "$AUTH_HEADER" \
@@ -63,8 +68,7 @@ jobs:
             -H "X-GitHub-Api-Version: 2022-11-28" \
             -d "{\"labels\":[\"$LABEL\"]}" \
             "$API_URL" >/dev/null
-
-          echo "Deleting Labels: $DELETE_LABELS"
+          echo "Deleting Labels:"
           for DELETE_LABEL in "${DELETE_LABELS[@]}"; do
               ENCODED_LABEL=$(echo "$DELETE_LABEL" | sed 's/ /%20/g')
               curl -X DELETE \
