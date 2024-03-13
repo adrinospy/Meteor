@@ -12,6 +12,7 @@
 #   LARGE_THRESHOLD: ${{vars.LARGE_THRESHOLD}}
 
 # get all the changes from git diff
+echo "CHANGES MADE: $CHANGES"
 CHANGES=$(echo "$CHANGES" | grep -E '^[+\-]' | grep -vE '^\+\+\+|^\-\-\-')
 
 # ignore blank lines

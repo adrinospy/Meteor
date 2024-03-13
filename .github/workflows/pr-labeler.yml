@@ -19,7 +19,7 @@ jobs:
       - name: Add labels based on size
         run: |
           git fetch origin ${{ github.base_ref }}
-          echo $(${{ steps.changed-files.outputs.all_changed_files }})
+          echo $(${{ github.action.pull_request.ALL_CHANGED_FILES }})
           CHANGES=$(git diff --ignore-all-space ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }})
           API_URL="https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels"
           AUTH_HEADER="Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}"
@@ -33,4 +33,4 @@ jobs:
           SMALL_THRESHOLD: ${{vars.SMALL_THRESHOLD}}
           MODERATE_THRESHOLD: ${{vars.MODERATE_THRESHOLD}}
           LARGE_THRESHOLD: ${{vars.LARGE_THRESHOLD}}
-          ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
+          ALL_CHANGED_FILES: ${{ github.action.pull_request.ALL_CHANGED_FILES }}
