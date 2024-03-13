@@ -21,11 +21,10 @@ jobs:
           git fetch origin ${{ github.base_ref }}
           CHANGES=$(git diff --ignore-all-space ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }})
           API_URL="https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels"
-          echo ${{ steps.changed-files.outputs.all_changed_files }}
           AUTH_HEADER="Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}"
 
           # permision to access the add-labels-pr.sh script
-          chmod a+x .github/workflows/add-labels-pr.sh 
+          chmod +x .github/workflows/add-labels-pr.sh 
           .github/workflows/add-labels-pr.sh
 
         env:
