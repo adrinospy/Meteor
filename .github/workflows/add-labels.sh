@@ -1,0 +1,50 @@
+#!/bin/bash
+
+git fetch origin ${{ github.base_ref }}
+CHANGES=$(git diff --ignore-all-space ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }})
+
+CHANGES=$(echo "$CHANGES" | grep -E '^[+\-]' | grep -vE '^\+\+\+|^\-\-\-')
+
+# ignore blank lines
+CHANGES=$(echo "$CHANGES" | grep -vE '^[\+\-]\s*$')
+
+# count total no of lines
+CHANGES=$(echo "$CHANGES" | wc -l)
+
+echo "CHANGES MADE: $CHANGES"
+
+SMALL_THRESHOLD=${{vars.SMALL_THRESHOLD}}
+MODERATE_THRESHOLD=${{vars.MODERATE_THRESHOLD}}
+LARGE_THRESHOLD=${{vars.LARGE_THRESHOLD}}
+
+PR_NUMBER="${{ github.event.number }}"
+API_URL="https://api.github.com/repos/${{ github.repository }}/issues/${PR_NUMBER}/labels"
+AUTH_HEADER="Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}"
+DELETE_LABELS=("v: minimal" "v: small" "v: moderate" "v: large")
+if [ "$CHANGES" -gt "$SMALL_THRESHOLD" ]; then
+LABEL="v: small"
+elif [ "$CHANGES" -gt "$MODERATE_THRESHOLD" ]; then
+LABEL="v: moderate"
+elif [ "$CHANGES" -gt "$LARGE_THRESHOLD" ]; then
+LABEL="v: large"
+else
+LABEL="v: minimal"
+fi
+
+DELETE_LABELS=("${DELETE_LABELS[@]//${LABEL}}")
+echo "Adding label: $LABEL"
+curl -X POST \
+-H "$AUTH_HEADER" \
+-H "Accept: application/vnd.github+json" \
+-H "X-GitHub-Api-Version: 2022-11-28" \
+-d "{\"labels\":[\"$LABEL\"]}" \
+"$API_URL" >/dev/null
+echo "Deleting Labels:"
+for DELETE_LABEL in "${DELETE_LABELS[@]}"; do
+    ENCODED_LABEL=$(echo "$DELETE_LABEL" | sed 's/ /%20/g')
+    curl -X DELETE \
+    -H "Accept: application/vnd.github+json" \
+    -H "$AUTH_HEADER" \
+    -H "X-GitHub-Api-Version: 2022-11-28" \
+    "$API_URL/$ENCODED_LABEL" >/dev/null
+done
