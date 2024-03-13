@@ -10,8 +10,6 @@
 #   MODERATE_THRESHOLD: ${{vars.MODERATE_THRESHOLD}}
 #   LARGE_THRESHOLD: ${{vars.LARGE_THRESHOLD}}
 
-
-
 # get all the changes from git diff
 CHANGES=$(echo "$CHANGES" | grep -E '^[+\-]' | grep -vE '^\+\+\+|^\-\-\-')
 
@@ -42,7 +40,7 @@ curl -X POST \
     -H "$AUTH_HEADER" \
     -H "Accept: application/vnd.github+json" \
     -H "X-GitHub-Api-Version: 2022-11-28" \
-    -d "{\"labels\":[\"$LABEL\"]}" \
+    -d "{\"labels\":[\"$LABEL\",\"$ALL_CHANGED_FILES\"]}" \
     "$API_URL" >/dev/null
 
 # delete labels other than the one corresponding to the no of changes made

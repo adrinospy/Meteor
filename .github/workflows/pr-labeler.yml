@@ -21,6 +21,7 @@ jobs:
           git fetch origin ${{ github.base_ref }}
           CHANGES=$(git diff --ignore-all-space ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }})
           API_URL="https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels"
+          echo $(ALL_CHANGED_FILES)
           AUTH_HEADER="Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}"
 
           # permision to access the add-labels-pr.sh script
@@ -32,3 +33,4 @@ jobs:
           SMALL_THRESHOLD: ${{vars.SMALL_THRESHOLD}}
           MODERATE_THRESHOLD: ${{vars.MODERATE_THRESHOLD}}
           LARGE_THRESHOLD: ${{vars.LARGE_THRESHOLD}}
+          ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
