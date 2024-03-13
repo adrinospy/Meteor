@@ -24,7 +24,7 @@ jobs:
           AUTH_HEADER="Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}"
 
           # permision to access the add-labels-pr.sh script
-          chmod +x .github/workflows/add-labels-pr.sh 
+          chmod +x .github/workflows/add-labels-pr.sh
           .github/workflows/add-labels-pr.sh
 
         env:
