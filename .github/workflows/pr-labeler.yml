@@ -20,6 +20,7 @@ jobs:
         run: |
           git fetch origin ${{ github.base_ref }}
           CHANGES=$(git diff --ignore-all-space ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }})
+          chmod +x .github/workflows/add-labels.sh 
           .github/workflows/add-labels.sh
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
