@@ -13,6 +13,8 @@
 
 size_label() {
     local CHANGES=$1
+    local API_URL=$2
+
     AUTH_HEADER="Authorization: Bearer $GITHUB_TOKEN"
     # get all the changes from git diff
     CHANGES=$(echo "$CHANGES" | grep -E '^[+\-]' | grep -vE '^\+\+\+|^\-\-\-')

@@ -25,12 +25,11 @@ jobs:
 
           # permision to access the add-labels-pr.sh script
           chmod +x .github/workflows/add-labels.sh
-          .github/workflows/add-labels.sh size_label "$CHANGES"
+          .github/workflows/add-labels.sh size_label "$CHANGES" "$API_URL"
 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SMALL_THRESHOLD: ${{ vars.SMALL_THRESHOLD }}
           MODERATE_THRESHOLD: ${{ vars.MODERATE_THRESHOLD }}
           LARGE_THRESHOLD: ${{ vars.LARGE_THRESHOLD }}
-          API_URL: ${{ API_URL }}
           ALL_CHANGED_FILES: ${{ github.action.pull_request.ALL_CHANGED_FILES }}
