@@ -41,7 +41,7 @@ curl -X POST \
     -H "$AUTH_HEADER" \
     -H "Accept: application/vnd.github+json" \
     -H "X-GitHub-Api-Version: 2022-11-28" \
-    -d "{\"labels\":[\"$LABEL\",\"$ALL_CHANGED_FILES\"]}" \
+    -d "{\"labels\":[\"$LABEL\"]}" \
     "$API_URL" >/dev/null
 
 # delete labels other than the one corresponding to the no of changes made
