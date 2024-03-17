@@ -19,12 +19,15 @@ jobs:
       - name: Add labels based on size
         run: |
           git fetch origin ${{ github.base_ref }}
-          CHANGES=$(git diff --ignore-all-space ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }})
 
-          CHANGES=$(echo "$CHANGES" | grep -E '^[+\-]' | grep -vE '^\+\+\+|^\-\-\-')
+          # get changes made
+          CHANGES=$(git diff --ignore-all-space ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }})
 
           # ignore blank lines
           CHANGES=$(echo "$CHANGES" | grep -vE '^[\+\-]\s*$')
+          
+          # ignore non necessary lines from git diff
+          CHANGES=$(echo "$CHANGES" | grep -E '^[+\-]' | grep -vE '^\+\+\+|^\-\-\-')
 
           # count total no of lines
           CHANGES=$(echo "$CHANGES" | wc -l)
