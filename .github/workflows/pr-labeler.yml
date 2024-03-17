@@ -45,20 +45,20 @@ jobs:
           DELETE_LABELS=("v: minimal" "v: small" "v: moderate" "v: large")
 
           if [ "$CHANGES" -gt "$SMALL_THRESHOLD" ]; then
-            LABEL="v: small"
+            SIZE_LABEL="v: small"
           elif [ "$CHANGES" -gt "$MODERATE_THRESHOLD" ]; then
-            LABEL="v: moderate"
+            SIZE_LABEL="v: moderate"
           elif [ "$CHANGES" -gt "$LARGE_THRESHOLD" ]; then
-            LABEL="v: large"
+            SIZE_LABEL="v: large"
           else
-            LABEL="v: minimal"
+            SIZE_LABEL="v: minimal"
           fi
 
           DELETE_LABELS=("${DELETE_LABELS[@]//${LABEL}}")
-          LABELS+=(${LABEL[@]})
+          LABELS+=(${SIZE_LABEL[@]})
 
           echo "Adding label: ${LABELS[@]}"
-          for element in "${array[@]}"; do
+          for LABEL in "${LABELS[@]}"; do
               curl -X POST \
                 -H "$AUTH_HEADER" \
                 -H "Accept: application/vnd.github+json" \
