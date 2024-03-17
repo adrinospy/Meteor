@@ -20,12 +20,14 @@ jobs:
         run: |
           git fetch origin ${{ github.base_ref }}
 
-          # get changes made
+          # get all the changes made and changed files 
           CHANGES=$(git diff --ignore-all-space ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }})
+          CHANGED_FILES=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }})
+          echo $CHANGED_FILES
 
           # ignore blank lines
           CHANGES=$(echo "$CHANGES" | grep -vE '^[\+\-]\s*$')
-          
+
           # ignore non necessary lines from git diff
           CHANGES=$(echo "$CHANGES" | grep -E '^[+\-]' | grep -vE '^\+\+\+|^\-\-\-')
 
