@@ -56,13 +56,16 @@ jobs:
 
           DELETE_LABELS=("${DELETE_LABELS[@]//${LABEL}}")
           LABELS+=(${LABEL[@]})
+
           echo "Adding label: ${LABELS[@]}"
-          curl -X POST \
-            -H "$AUTH_HEADER" \
-            -H "Accept: application/vnd.github+json" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            -d "{\"labels\":[\"$LABEL\"]}" \
-            "$API_URL" >/dev/null
+          for element in "${array[@]}"; do
+              curl -X POST \
+                -H "$AUTH_HEADER" \
+                -H "Accept: application/vnd.github+json" \
+                -H "X-GitHub-Api-Version: 2022-11-28" \
+                -d "{\"labels\":[\"$LABEL\"]}" \
+                "$API_URL" >/dev/null
+          done
 
           echo "Deleting Labels:"
 
