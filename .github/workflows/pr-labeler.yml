@@ -1,3 +1,4 @@
+
 name: Size Labeler/Checker
 on:
   pull_request_target:
@@ -24,12 +25,9 @@ jobs:
           CHANGES=$(git diff --ignore-all-space ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }})
           CHANGED_FILES=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | awk -F'src/sage/' '{print $2}' | cut -d'/' -f1 | sed 's/\([^ ]\+\)/c: \1/g')
 
-          readarray -t LABELS <<< "$CHANGED_FILES"
-          echo $LABELS
-
           # ignore blank lines
           CHANGES=$(echo "$CHANGES" | grep -vE '^[\+\-]\s*$')
-          
+
           # ignore non necessary lines from git diff
           CHANGES=$(echo "$CHANGES" | grep -E '^[+\-]' | grep -vE '^\+\+\+|^\-\-\-')
 
@@ -37,6 +35,7 @@ jobs:
           CHANGES=$(echo "$CHANGES" | wc -l)
 
           echo "CHANGES MADE: $CHANGES"
+          echo "FILES CHANGED: $CHANGED_FILES"
 
           PR_NUMBER="${{ github.event.number }}"
           API_URL="https://api.github.com/repos/${{ github.repository }}/issues/${PR_NUMBER}/labels"
@@ -55,6 +54,8 @@ jobs:
           fi
 
           DELETE_LABELS=("${DELETE_LABELS[@]//${SIZE_LABEL}}")
+
+          readarray -t LABELS <<< "$CHANGED_FILES"
           LABELS+=("$SIZE_LABEL")
 
           echo "Adding label: ${LABELS[@]}"
