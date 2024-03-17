@@ -24,8 +24,10 @@ jobs:
           CHANGES=$(git diff --ignore-all-space ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }})
           CHANGED_FILES=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | awk -F'src/sage/' '{print $2}' | cut -d'/' -f1)
 
+          echo $CHANGED_FILES
+          
           for ((i = 0; i < ${#CHANGED_FILES[@]}; i++)); do
-            CHANGED_FILES[$i]="c:${CHANGED_FILES[$i]}"
+            CHANGED_FILES[$i]="c: ${CHANGED_FILES[$i]}"
           done
           echo $CHANGED_FILES
 
