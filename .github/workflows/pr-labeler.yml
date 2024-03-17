@@ -54,7 +54,7 @@ jobs:
             SIZE_LABEL="v: minimal"
           fi
 
-          DELETE_LABELS=("${DELETE_LABELS[@]//${LABEL}}")
+          DELETE_LABELS=("${DELETE_LABELS[@]//${SIZE_LABEL}}")
           LABELS+=("$SIZE_LABEL")
 
           echo "Adding label: ${LABELS[@]}"
