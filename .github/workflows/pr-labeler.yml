@@ -55,7 +55,7 @@ jobs:
           fi
 
           DELETE_LABELS=("${DELETE_LABELS[@]//${LABEL}}")
-          LABELS+=(${SIZE_LABEL[@]})
+          LABELS+=("$SIZE_LABEL")
 
           echo "Adding label: ${LABELS[@]}"
           for LABEL in "${LABELS[@]}"; do
