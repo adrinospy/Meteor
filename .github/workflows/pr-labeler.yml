@@ -24,7 +24,7 @@ jobs:
           CHANGES=$(git diff --ignore-all-space ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }})
           CHANGED_FILES=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | awk -F'src/sage/' '{print $2}' | cut -d'/' -f1 | sed 's/\([^ ]\+\)/c: \1/g')
 
-          IFS=', ' read -r -a LABELS <<< "$CHANGED_FILES"
+          readarray -t LABELS <<< "$CHANGED_FILES"
           echo $LABELS
 
           # ignore blank lines
@@ -55,7 +55,7 @@ jobs:
           fi
 
           DELETE_LABELS=("${DELETE_LABELS[@]//${LABEL}}")
-          LABELS+=($LABEL)
+          LABELS+=(${LABEL[@]})
           echo "Adding label: ${LABELS[@]}"
           curl -X POST \
             -H "$AUTH_HEADER" \
