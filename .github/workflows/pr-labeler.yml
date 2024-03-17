@@ -56,7 +56,7 @@ jobs:
 
           DELETE_LABELS=("${DELETE_LABELS[@]//${LABEL}}")
           LABELS+=($LABEL)
-          echo "Adding label: $LABELS"
+          echo "Adding label: ${LABELS[@]}"
           curl -X POST \
             -H "$AUTH_HEADER" \
             -H "Accept: application/vnd.github+json" \
