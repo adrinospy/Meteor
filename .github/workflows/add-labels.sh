@@ -14,7 +14,6 @@
 size_label() {
 
     local CHANGES=$1
-    local arg2=$2
     AUTH_HEADER="Authorization: Bearer $GITHUB_TOKEN"
 
     # get all the changes from git diff
@@ -62,4 +61,4 @@ size_label() {
     done
 }
 
-size_label "$1" "$2"
+# size_label "$1" "$2"
